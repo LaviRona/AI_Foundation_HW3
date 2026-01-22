@@ -90,7 +90,53 @@ def solve_SAT(
         CNF_formula: List[List[Tuple[Any, bool]]],
         assignment: dict
 ) -> Tuple[bool, Optional[dict]]:
-    raise NotImplementedError
+    # DPLL algorithm implementation
+    curr_assignment = assignment.copy() 
+    #Unit Propagation
+    while True:
+        new_unit_found = False
+        all_satisfied = True # assumption
+        
+        for clause in CNF_formula:
+            status, result = clause_status(clause, curr_assignment)
+            if status == "conflict":
+                return False, None # dead end
+            if status == "unresolved":
+                all_satisfied = False 
+            if status == "unit":
+                # This clause must be satisfied by assigning the only unassigned literal accordingly
+                var, val = result
+                curr_assignment[var] = val
+                new_unit_found = True
+                all_satisfied = False 
+                break 
+
+        if all_satisfied:
+            return True, curr_assignment
+            
+        # Condition to stop: we've gone through everything, no conflicts, but no new unit found
+        # Time to start guessing (:
+        if not new_unit_found:
+            break
+
+    # If we got here it means that we need to choose a variable to guess
+    # Choose the first unassigned variable
+    for var in variables:
+        if var not in curr_assignment:
+            # Try both assignments (True and False)
+            curr_assignment[var] = True
+            is_satisfiable, result = solve_SAT(variables, CNF_formula, curr_assignment)
+            if is_satisfiable:
+                return True, result
+
+            curr_assignment[var] = False
+            is_satisfiable, result = solve_SAT(variables, CNF_formula, curr_assignment)
+            if is_satisfiable:
+                return True, result
+
+            return False, None
+
+    return False, None
 
 
 def clause_status(
@@ -118,4 +164,5 @@ def numbers_assignment(
         assignment: dict,
         input: Any
 ) -> List[List[int]]:
-    raise NotImplementedError
+    N=len(variables)
+    grid = [[0 for _ in range(N)] for _ in range(N)]
