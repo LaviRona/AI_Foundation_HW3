@@ -5,7 +5,7 @@ ids = ["111111111, 222222222"]
 
 def to_CNF(input) -> Tuple[list, List[List[Tuple[Any, bool]]]]:
 
-    # parsing the input and initializing the grid
+    # parsing the input
     rectangle_size,fixed,pairs= input
     rectangle_length=rectangle_size[0]
     rectangle_width=rectangle_size[1]
@@ -164,5 +164,13 @@ def numbers_assignment(
         assignment: dict,
         input: Any
 ) -> List[List[int]]:
-    N=len(variables)
+    # parsing the input as in to_CNF function
+    rectangle_size,_,_= input
+    rectangle_length=rectangle_size[0]
+    rectangle_width=rectangle_size[1]
+    N=rectangle_width*rectangle_length #total grid size is N*N
     grid = [[0 for _ in range(N)] for _ in range(N)]
+    for (row,col,val), assigned_value in assignment.items():
+        if assigned_value:
+            grid[row][col] = val
+    return grid
