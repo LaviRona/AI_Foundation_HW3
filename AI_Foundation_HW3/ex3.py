@@ -1,6 +1,6 @@
 from typing import Tuple, List, Any, Optional
 
-ids = ["111111111, 222222222"]
+ids = ["325281459, 324697549"]
 
 
 def to_CNF(input) -> Tuple[list, List[List[Tuple[Any, bool]]]]:

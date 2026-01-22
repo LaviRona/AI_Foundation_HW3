@@ -1,4 +1,4 @@
-import ex31 as ex3
+import ex3 as ex3
 import time
 from inputs import non_comp_problems
 
