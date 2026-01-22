@@ -97,7 +97,20 @@ def clause_status(
         clause: List[Tuple[Any, bool]],
         assignment: dict
 ) -> Tuple[str, Optional[Tuple[Any, bool]]]:
-    raise NotImplementedError
+    unassigned_literal = []
+    for literal, required_sign in clause:
+        if literal in assignment:
+            if assignment[literal] == required_sign:
+                return "satisfied", None
+        else:
+            unassigned_literal.append((literal, required_sign))
+    if len(unassigned_literal) == 0: # all literals are assigned but none satisfied the clause (otherwise we would have returned "satisfied" earlier)
+        return "conflict", None
+    elif len(unassigned_literal) == 1:
+        return "unit", unassigned_literal[0] #only one unassigned literal, in order to satisfy the clause, this literal must be assigned accordingly
+    else:
+        return "unresolved", None # We don't have enought information to decide yet
+        
 
 
 def numbers_assignment(
